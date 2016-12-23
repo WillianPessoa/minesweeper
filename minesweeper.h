@@ -10,8 +10,10 @@ typedef struct _FIELD {
     int pos_x;      // Posição no eixo x;
     int pos_y;      // Posição no eixo y;
     int bomb;       // Indicador de bomba neste campo (true or false - definidas no .c);
-    int marked;    // Indicador de marcação (true or false - definidas no .c).
+    int revealed;   // Indicador de revelação do campo (true or false - definidas no .c);
+    int marked;     // Indicador de marcação (true or false - definidas no .c);
     int nearBombs;  // Bombas próximas;
+
 }FIELD;
 
 /** ESTRUTURA DO COLETIVO DE CAMPOS */
