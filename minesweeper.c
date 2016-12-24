@@ -173,8 +173,8 @@ void setNearBombsAround(FIELD * field, GRID * grid) {
     int max_y = field->pos_y == grid->size-1 ? field->pos_y :field->pos_y+1;
 
     //Percorre o entorno de acordo com os mínimos e máximos encontrados.
-    for (i = min_x; i < max_x; ++i) {
-        for (j = min_y; j < max_y; ++j) {
+    for (i = min_x; i <= max_x; ++i) {
+        for (j = min_y; j <= max_y; ++j) {
             if (i == field->pos_x && j == field->pos_y) {
                 continue;
             }
