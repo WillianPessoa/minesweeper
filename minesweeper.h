@@ -18,7 +18,7 @@ typedef struct _FIELD {
 
 /** ESTRUTURA DO COLETIVO DE CAMPOS */
 typedef struct _GRID {
-    FIELD ** grid;  // Matriz de estruturas do tipo FIELD;
+    FIELD ** fields;  // Matriz de estruturas do tipo FIELD;
     int size;       // Tamanho do grid. Contém o tamanho de FIELDs por em cada linha e linhas de mesmo tamanho.
     int bombs;      // Quantidade de bombas no grid;
 }GRID;
@@ -36,7 +36,7 @@ GRID * makeAGrid(int size, int bombs);
  */
 void showGrid(GRID * grid);
 
-/** FUNÇÃO CLIDADORA DE CAMPO
+/** FUNÇÃO CLICADORA DE CAMPO
  *  O usuário irá "clicar" no campo declarando a posição x e y no grid.
  *  Uma outra em coisa em pauta é o tipo do Click. Ele pode ser um click para abrir o campo
  *  ou um click para marcar o campo. Podemos definir isso com um "enum" ou criar outra função
@@ -58,7 +58,14 @@ void clickIn(int pos_x, int pos_y, GRID * grid);
  *  Essa função irá verificar quantas bombas existem em volta do campo
  *  e alterará o membro "nearBombs"
  */
-void checkNearBombs(FIELD * field);
+void checkNearBombs(FIELD * field, GRID *grid);
+
+/** FUNÇÃO INCREMENTAR O ATRIBUTO "BOMBAS PRÓXIMAS" EM TORNO DE UMA BOMBA SETADA
+ *  Abordagem diferente da função de cima. Pode ser chamada sempre que uma bomba for posta
+ *  em um determinado campo. Creio que essa função temuma abordagem mais otimizada.
+ *  Não apagarei a CheckNearBombs por enquanto.
+ */
+void setNearBombsAround(FIELD * field, GRID *grid);
 
 /** FUNÇÃO "SOLUCIONADORA" (FALTOU CRIATIVIDADE AQUI)
  *  Percorrerá o grid a partir do campo clicado em busca de um campo(na verdade vários)
