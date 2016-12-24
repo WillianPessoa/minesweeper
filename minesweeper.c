@@ -8,6 +8,7 @@
 
 const char flag = '?';
 const char notClicked = '*';
+const char mined = 'M';
 
 //EXEMPLO: Função defina neste arquivo. Veja "main.c".
 void testFunction() {
@@ -15,12 +16,12 @@ void testFunction() {
 }
 
 // Retorna
-GRID * makeAGrid(int size, int bombs) {
+GRID * makeAGrid(int size, int mines) {
     GRID * grid = malloc(sizeof(grid));
 
     // Atribui ao Grid o tamanho e a quantidade de bombas que este deve conter;
     grid->size = size;
-    grid->bombs = bombs;
+    grid->mines = mines;
 
     // Constrói o grid;
     grid->fields = malloc(size * sizeof(FIELD*));
@@ -33,10 +34,10 @@ GRID * makeAGrid(int size, int bombs) {
         for (j = 0; j < size; ++j) {
             grid->fields[i][j].pos_x = i;
             grid->fields[i][j].pos_y = j;
-            grid->fields[i][j].bomb = FALSE;
+            grid->fields[i][j].mine = FALSE;
             grid->fields[i][j].marked = FALSE;
             grid->fields[i][j].revealed = FALSE;
-            grid->fields[i][j].nearBombs = 0;
+            grid->fields[i][j].nearMines = 0;
         }
     }
     return grid;
@@ -53,25 +54,25 @@ void showGrid(GRID * grid) {
 
             // Se o campo estiver marcado, exibe a sinalização de marcação;
             if (grid->fields[i][j].marked) {
-                fprintf(stdout, "[%c] ", flag);
+                fprintf(stdout, "[%c]", flag);
             }
 
             // Se o campo já foi revelado...;
             else if (grid->fields[i][j].revealed) {
 
                 //... e se o campo possuir bombas próximas, exibe a quantidade;
-                if(grid->fields[i][j].nearBombs != 0) {
-                    fprintf(stdout, "[%d] ", grid->fields[i][j].nearBombs);
+                if(grid->fields[i][j].nearMines != 0) {
+                    fprintf(stdout, "[%d] ", grid->fields[i][j].nearMines);
                 }
                 //... e se não possuir bombas próximas, exibe a sinalização de um campo vazio;
                 else {
-                    fprintf(stdout, "[ ] ");
+                    fprintf(stdout, "[ ]");
                 }
             }
 
             //Se não tiver sido clicado, exibe a sinalização de não clicado.
             else {
-                fprintf(stdout, "[%c] ", notClicked);
+                fprintf(stdout, "[%c]", notClicked);
             }
         }
         fprintf(stdout, "\n");
@@ -79,13 +80,64 @@ void showGrid(GRID * grid) {
     fprintf(stdout, "\n");
 }
 
+void showGridRevelead(GRID * grid) {
+    int i, j;
+
+    fprintf(stdout, "\n***************** GRID *****************\n\n");
+
+    for (i = 0; i < grid->size; ++i) {
+        for (j = 0; j < grid->size; ++j) {
+
+            if (grid->fields[i][j].mine == TRUE) {
+                fprintf(stdout, "[%c]", mined);
+            }
+            else if (grid->fields[i][j].nearMines != 0) {
+                fprintf(stdout, "[%d]", grid->fields[i][j].nearMines);
+            }
+            else {
+                fprintf(stdout, "[ ]");
+            }
+        }
+        fprintf(stdout, "\n");
+    }
+    fprintf(stdout, "\n");
+}
+
+// Planta a quantidade de minas no grid aleatoriamente.
+void plantMinesIn(GRID *grid, int minesToPlant) {
+    srand(time(NULL));
+
+    int size = grid->size;
+
+    int pos_x;
+    int pos_y;
+
+    int minesPlanted;
+
+    for (minesPlanted = 0; minesPlanted < minesToPlant; ++minesPlanted) {
+        pos_x = rand() % size;
+        pos_y = rand() % size;
+
+        if (grid->fields[pos_x][pos_y].mine == FALSE) {
+            grid->fields[pos_x][pos_y].mine = TRUE;
+            setNearMinesAround(&grid->fields[pos_x][pos_y], grid);
+        }
+        else {
+            --minesPlanted;
+            continue;
+        }
+    }
+    grid->mines = minesPlanted;
+
+}
+
 // Percorre o entorno de um campo, verifica quantas bombas existem em volta e incrementa
 // o atributo "nearBombs" de acordo
-void checkNearBombs(FIELD * field, GRID * grid) {
+void checkNearMines(FIELD * field, GRID * grid) {
     int i, j;
 
     // Reseta o membro "nearBombs"
-    field->nearBombs = 0;
+    field->nearMines = 0;
 
     //Definindo minimos e máximos
     int min_x = field->pos_x == 0 ? field->pos_x : field->pos_x-1;
@@ -95,14 +147,14 @@ void checkNearBombs(FIELD * field, GRID * grid) {
     int max_y = field->pos_y == grid->size-1 ? field->pos_y :field->pos_y+1;
 
     // Percorre o entorno...
-    for (i = min_x; i < max_x; ++i) {
-        for (j = min_y; j < max_y; ++j) {
+    for (i = min_x; i <= max_x; ++i) {
+        for (j = min_y; j <= max_y; ++j) {
             if (i == field->pos_x && j == field->pos_y) {
                 continue;
             }
             // ... e incrementa para cada bomba achada.
-            if (grid->fields[i][j].bomb) {
-                ++field->nearBombs;
+            if (grid->fields[i][j].mine) {
+                ++field->nearMines;
             }
         }
     }
@@ -110,7 +162,7 @@ void checkNearBombs(FIELD * field, GRID * grid) {
 
 // Percorre o entorno de um campo que possui uma bomba, e incrementa o "nearBombs"
 // de cada campo adjacente.
-void setNearBombsAround(FIELD * field, GRID * grid) {
+void setNearMinesAround(FIELD * field, GRID * grid) {
     int i, j;
 
     //Definindo minimos e máximos
@@ -121,13 +173,13 @@ void setNearBombsAround(FIELD * field, GRID * grid) {
     int max_y = field->pos_y == grid->size-1 ? field->pos_y :field->pos_y+1;
 
     //Percorre o entorno de acordo com os mínimos e máximos encontrados.
-    for (i = min_x; i < max_x; ++i) {
-        for (j = min_y; j < max_y; ++j) {
+    for (i = min_x; i <= max_x; ++i) {
+        for (j = min_y; j <=max_y; ++j) {
             if (i == field->pos_x && j == field->pos_y) {
                 continue;
             }
             // e incrementa o "nearBombs" de cada um.
-            ++grid->fields[i][j].nearBombs;
+            ++grid->fields[i][j].nearMines;
         }
     }
 }

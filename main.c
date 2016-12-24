@@ -7,6 +7,11 @@ int main()
     testFunction();
 
     GRID * grid = makeAGrid(10, 0);
+
     showGrid(grid);
+
+    plantMinesIn(grid, 30);
+
+    showGridRevelead(grid);
     return 0;
 }
