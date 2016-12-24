@@ -11,7 +11,7 @@ typedef struct _FIELD {
     int mine;       // Indicador de bomba neste campo (true or false - definidas no .c);
     int revealed;   // Indicador de revelação do campo (true or false - definidas no .c);
     int marked;     // Indicador de marcação (true or false - definidas no .c);
-    int nearBombs;  // minas próximas;
+    int nearMines;  // minas próximas;
 
 }FIELD;
 
@@ -27,7 +27,7 @@ typedef struct _GRID {
  *  Esse é um modelo inicial. Podemos definir macros em relação ao tamanho do grid
  *  e dificuldade e, assim, não não precisaremos passar muitos argumentos para as funções.
  */
-GRID * makeAGrid(int size, int bombs);
+GRID * makeAGrid(int size, int mines);
 
 /** EXIBIR GRID NA TELA DO CONSOLE
  *  Exibira somente o grid. Outras coisas relacionadas ao console, irão ser manipuladas
@@ -63,14 +63,14 @@ void plantMinesIn(GRID *grid, int minesToPlant);
  *  Essa função irá verificar quantas minas existem em volta do campo
  *  e alterará o membro "nearBombs"
  */
-void checkNearBombs(FIELD * field, GRID *grid);
+void checkNearMines(FIELD * field, GRID *grid);
 
 /** FUNÇÃO INCREMENTAR O ATRIBUTO "MINAS PRÓXIMAS" EM TORNO DE UMA BOMBA SETADA
  *  Abordagem diferente da função de cima. Pode ser chamada sempre que uma bomba for posta
  *  em um determinado campo. Creio que essa função temuma abordagem mais otimizada.
  *  Não apagarei a CheckNearBombs por enquanto.
  */
-void setNearBombsAround(FIELD * field, GRID *grid);
+void setNearMinesAround(FIELD * field, GRID *grid);
 
 /** FUNÇÃO "SOLUCIONADORA" (FALTOU CRIATIVIDADE AQUI)
  *  Percorrerá o grid a partir do campo clicado em busca de um campo(na verdade vários)
