@@ -1,9 +1,10 @@
 #include "minesweeper.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
-#define TRUE 1;
-#define FALSE 0;
+#define TRUE 1
+#define FALSE 0
 
 const char flag = '?';
 const char notClicked = '*';
@@ -22,20 +23,20 @@ GRID * makeAGrid(int size, int bombs) {
     grid->bombs = bombs;
 
     // Constrói o grid;
-    grid->grid = malloc(size * sizeof(FIELD*));
+    grid->fields = malloc(size * sizeof(FIELD*));
 
     int i, j;
     for (i = 0; i < size; ++i) {
-        grid->grid[i] = malloc(size * sizeof(FIELD));
+        grid->fields[i] = malloc(size * sizeof(FIELD));
 
         // Atribui os valores padrões para cada campo;
         for (j = 0; j < size; ++j) {
-            grid->grid[i][j].pos_x = i;
-            grid->grid[i][j].pos_y = j;
-            grid->grid[i][j].bomb = FALSE;
-            grid->grid[i][j].marked = FALSE;
-            grid->grid[i][j].revealed = FALSE;
-            grid->grid[i][j].nearBombs = 0;
+            grid->fields[i][j].pos_x = i;
+            grid->fields[i][j].pos_y = j;
+            grid->fields[i][j].bomb = FALSE;
+            grid->fields[i][j].marked = FALSE;
+            grid->fields[i][j].revealed = FALSE;
+            grid->fields[i][j].nearBombs = 0;
         }
     }
     return grid;
@@ -51,16 +52,16 @@ void showGrid(GRID * grid) {
         for (j = 0; j < grid->size; ++j) {
 
             // Se o campo estiver marcado, exibe a sinalização de marcação;
-            if (grid->grid[i][j].marked) {
+            if (grid->fields[i][j].marked) {
                 fprintf(stdout, "[%c] ", flag);
             }
 
             // Se o campo já foi revelado...;
-            else if (grid->grid[i][j].revealed) {
+            else if (grid->fields[i][j].revealed) {
 
                 //... e se o campo possuir bombas próximas, exibe a quantidade;
-                if(grid->grid[i][j].nearBombs != 0) {
-                    fprintf(stdout, "[%d] ", grid->grid[i][j].nearBombs);
+                if(grid->fields[i][j].nearBombs != 0) {
+                    fprintf(stdout, "[%d] ", grid->fields[i][j].nearBombs);
                 }
                 //... e se não possuir bombas próximas, exibe a sinalização de um campo vazio;
                 else {
@@ -76,4 +77,57 @@ void showGrid(GRID * grid) {
         fprintf(stdout, "\n");
     }
     fprintf(stdout, "\n");
+}
+
+// Percorre o entorno de um campo, verifica quantas bombas existem em volta e incrementa
+// o atributo "nearBombs" de acordo
+void checkNearBombs(FIELD * field, GRID * grid) {
+    int i, j;
+
+    // Reseta o membro "nearBombs"
+    field->nearBombs = 0;
+
+    //Definindo minimos e máximos
+    int min_x = field->pos_x == 0 ? field->pos_x : field->pos_x-1;
+    int max_x = field->pos_x == grid->size-1 ? field->pos_x :field->pos_x+1;
+
+    int min_y = field->pos_y == 0 ? field->pos_y : field->pos_y-1;
+    int max_y = field->pos_y == grid->size-1 ? field->pos_y :field->pos_y+1;
+
+    // Percorre o entorno...
+    for (i = min_x; i < max_x; ++i) {
+        for (j = min_y; j < max_y; ++j) {
+            if (i == field->pos_x && j == field->pos_y) {
+                continue;
+            }
+            // ... e incrementa para cada bomba achada.
+            if (grid->fields[i][j].bomb) {
+                ++field->nearBombs;
+            }
+        }
+    }
+}
+
+// Percorre o entorno de um campo que possui uma bomba, e incrementa o "nearBombs"
+// de cada campo adjacente.
+void setNearBombsAround(FIELD * field, GRID * grid) {
+    int i, j;
+
+    //Definindo minimos e máximos
+    int min_x = field->pos_x == 0 ? field->pos_x : field->pos_x-1;
+    int max_x = field->pos_x == grid->size-1 ? field->pos_x :field->pos_x+1;
+
+    int min_y = field->pos_y == 0 ? field->pos_y : field->pos_y-1;
+    int max_y = field->pos_y == grid->size-1 ? field->pos_y :field->pos_y+1;
+
+    //Percorre o entorno de acordo com os mínimos e máximos encontrados.
+    for (i = min_x; i < max_x; ++i) {
+        for (j = min_y; j < max_y; ++j) {
+            if (i == field->pos_x && j == field->pos_y) {
+                continue;
+            }
+            // e incrementa o "nearBombs" de cada um.
+            ++grid->fields[i][j].nearBombs;
+        }
+    }
 }
