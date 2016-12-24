@@ -8,6 +8,7 @@
 
 const char flag = '?';
 const char notClicked = '*';
+const char mined = 'M';
 
 //EXEMPLO: Função defina neste arquivo. Veja "main.c".
 void testFunction() {
@@ -20,7 +21,7 @@ GRID * makeAGrid(int size, int bombs) {
 
     // Atribui ao Grid o tamanho e a quantidade de bombas que este deve conter;
     grid->size = size;
-    grid->bombs = bombs;
+    grid->mines = bombs;
 
     // Constrói o grid;
     grid->fields = malloc(size * sizeof(FIELD*));
@@ -33,7 +34,7 @@ GRID * makeAGrid(int size, int bombs) {
         for (j = 0; j < size; ++j) {
             grid->fields[i][j].pos_x = i;
             grid->fields[i][j].pos_y = j;
-            grid->fields[i][j].bomb = FALSE;
+            grid->fields[i][j].mine = FALSE;
             grid->fields[i][j].marked = FALSE;
             grid->fields[i][j].revealed = FALSE;
             grid->fields[i][j].nearBombs = 0;
@@ -53,7 +54,7 @@ void showGrid(GRID * grid) {
 
             // Se o campo estiver marcado, exibe a sinalização de marcação;
             if (grid->fields[i][j].marked) {
-                fprintf(stdout, "[%c] ", flag);
+                fprintf(stdout, "[%c]", flag);
             }
 
             // Se o campo já foi revelado...;
@@ -65,18 +66,69 @@ void showGrid(GRID * grid) {
                 }
                 //... e se não possuir bombas próximas, exibe a sinalização de um campo vazio;
                 else {
-                    fprintf(stdout, "[ ] ");
+                    fprintf(stdout, "[ ]");
                 }
             }
 
             //Se não tiver sido clicado, exibe a sinalização de não clicado.
             else {
-                fprintf(stdout, "[%c] ", notClicked);
+                fprintf(stdout, "[%c]", notClicked);
             }
         }
         fprintf(stdout, "\n");
     }
     fprintf(stdout, "\n");
+}
+
+void showGridRevelead(GRID * grid) {
+    int i, j;
+
+    fprintf(stdout, "\n***************** GRID *****************\n\n");
+
+    for (i = 0; i < grid->size; ++i) {
+        for (j = 0; j < grid->size; ++j) {
+
+            if (grid->fields[i][j].mine == TRUE) {
+                fprintf(stdout, "[%c]", mined);
+            }
+            else if (grid->fields[i][j].nearBombs != 0) {
+                fprintf(stdout, "[%d]", grid->fields[i][j].nearBombs);
+            }
+            else {
+                fprintf(stdout, "[ ]");
+            }
+        }
+        fprintf(stdout, "\n");
+    }
+    fprintf(stdout, "\n");
+}
+
+// Planta a quantidade de minas no grid aleatoriamente.
+void plantMinesIn(GRID *grid, int minesToPlant) {
+    srand(time(NULL));
+
+    int size = grid->size;
+
+    int pos_x;
+    int pos_y;
+
+    int minesPlanted;
+
+    for (minesPlanted = 0; minesPlanted < minesToPlant; ++minesPlanted) {
+        pos_x = rand() % size;
+        pos_y = rand() % size;
+
+        if (grid->fields[pos_x][pos_y].mine == FALSE) {
+            grid->fields[pos_x][pos_y].mine = TRUE;
+            setNearBombsAround(&grid->fields[pos_x][pos_y], grid);
+        }
+        else {
+            --minesPlanted;
+            continue;
+        }
+    }
+    grid->mines = minesPlanted;
+
 }
 
 // Percorre o entorno de um campo, verifica quantas bombas existem em volta e incrementa
@@ -101,7 +153,7 @@ void checkNearBombs(FIELD * field, GRID * grid) {
                 continue;
             }
             // ... e incrementa para cada bomba achada.
-            if (grid->fields[i][j].bomb) {
+            if (grid->fields[i][j].mine) {
                 ++field->nearBombs;
             }
         }
