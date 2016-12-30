@@ -1,12 +1,12 @@
 # minesweeper
-Origem do Projeto
-Introdução
-  O que é Campo Minado
-    História
-    Regras
-    Etc
-Como nosso jogo funciona
-Referências
+-Origem do Projeto
+-Introdução
+  -O que é Campo Minado
+    -História
+    -Regras
+    -Etc
+-Como nosso jogo funciona
+-Referências
 
 -------------------------------------------------------------------------------------------------------------------------------
 
