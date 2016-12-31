@@ -27,7 +27,7 @@ typedef struct _GRID {
  *  Esse é um modelo inicial. Podemos definir macros em relação ao tamanho do grid
  *  e dificuldade e, assim, não não precisaremos passar muitos argumentos para as funções.
  */
-GRID * makeAGrid(int size, int mines);
+void buildGridwith(GRID *grid, int size, int mines);
 
 /** EXIBIR GRID NA TELA DO CONSOLE
  *  Exibira somente o grid. Outras coisas relacionadas ao console, irão ser manipuladas

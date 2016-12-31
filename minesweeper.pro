@@ -4,7 +4,11 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.c \
-    minesweeper.c
+    minesweeper.c \
+    menu.c \
+    records.c
 
 HEADERS += \
-    minesweeper.h
+    minesweeper.h \
+    menu.h \
+    records.h

@@ -6,6 +6,8 @@
 #define TRUE 1
 #define FALSE 0
 
+#define GRID_MAX_SIZE 30
+
 const char flag = '?';
 const char notClicked = '*';
 const char mined = 'M';
@@ -16,19 +18,31 @@ void testFunction() {
 }
 
 // Retorna
-GRID * makeAGrid(int size, int mines) {
-    GRID * grid = malloc(sizeof(grid));
+void buildGrid(GRID * grid, int size, int mines) {
+    int firstBuilding = !grid ? TRUE : FALSE;
+
+    // Verifica se é a primeira "construção" do grid. Se sim, ele aloca a memória.
+    // Sendo a primeira construção do grid, ele aloca a memória do campo com o tamanho máximo do grid.
+    // Esse tamanho máximo é para alocar, de uma só vez, todo o possível tamanho do grid.
+    // Dessa forma, não precisamos nos preocupar em alocar e realocar memória.
+    if(firstBuilding) {
+        GRID * grid = malloc(sizeof(grid));
+    }
 
     // Atribui ao Grid o tamanho e a quantidade de bombas que este deve conter;
     grid->size = size;
     grid->mines = mines;
 
-    // Constrói o grid;
-    grid->fields = malloc(size * sizeof(FIELD*));
+    if(firstBuilding) {
+        grid->fields = malloc(GRID_MAX_SIZE * sizeof(FIELD*));
+    }
 
     int i, j;
     for (i = 0; i < size; ++i) {
-        grid->fields[i] = malloc(size * sizeof(FIELD));
+
+        if(firstBuilding) {
+            grid->fields[i] = malloc(GRID_MAX_SIZE * sizeof(FIELD));
+        }
 
         // Atribui os valores padrões para cada campo;
         for (j = 0; j < size; ++j) {
