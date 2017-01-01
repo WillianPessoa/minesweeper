@@ -6,35 +6,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef enum _OPTIONS {
-    EXIT,
-    FIRST,
-    SECOND,
-    THIRD,
-    FOURTH,
-    FIFTH,
-    NULL_OPTION
-}OPTIONS;
-
-typedef enum _SIZE {
-    PEQUENO = 15,
-    MEDIO = 30,
-    GRANDE = 60
-}MINES;
-
-typedef enum _QMINES {
-    POUCAS = 15,
-    NORMAL = 30,
-    MUITAS = 60
-}QMINES;
+#include <time.h>
 
 void launchMenu(GRID * grid) {
 
     int mainOp = NULL_OPTION;
 
-    int size = MEDIO;
-    int mines = size * (NORMAL/100);
+    int size = MEDIANO;
+    int mines = (size*size) * MEDIA/100;
 
     while (mainOp != EXIT) {
 
@@ -50,16 +29,43 @@ void launchMenu(GRID * grid) {
         switch(mainOp) {
 
         case FIRST:
-            //INIT GAME
+            preGame(&size, &mines);
+            launchGame(grid, size, mines);
             break;
         case SECOND:
             setupMenu(&size, &mines);
             break;
         case THIRD:
-            records();
+            //records();
             break;
         }
     }
+}
+
+void preGame(int * size, int * mines) {
+
+    int decisionOp = NULL_OPTION;
+
+    fprintf(stdout, "\n*********INICIANDO JOGO*********\n\n"
+                    "O jogo foi esta definido para iniciar com tamanho %d\n"
+                    " e quantidade de minas igual a %d\n\n"
+                    "[1] Iniciar o jogo\n"
+                    "[2] Ir no menu de configuracao\n\n"
+                    "Opcao: ", *size, *mines);
+
+    while (fscanf(stdin, "%d", &decisionOp) != EOF && (decisionOp < FIRST || decisionOp > SECOND));
+
+    switch(decisionOp) {
+
+    case SECOND:
+        setupMenu(size, mines);
+        break;
+    }
+
+    fprintf(stdout, "\n\nINICIALIZANDO O JOGO...\n");
+
+    unsigned int i;
+    for(i = 0; i < 599999999; ++i) {}
 }
 
 void setupMenu(int * size, int * mines) {
@@ -107,7 +113,7 @@ void defSizeMenu(int * size) {
         *size = PEQUENO;
         break;
     case SECOND:
-        *size = MEDIO;
+        *size = MEDIANO;
         break;
     case THIRD:
         *size = GRANDE;
@@ -121,8 +127,8 @@ void defMinesMenu(int * mines, int *size) {
 
     fprintf(stdout, "\n**************DEF_MINES**************\n\n"
                     "[1] Poucas (10%% do tamanho do grid)\n"
-                    "[2] Normal (30%% do tamanho do grid\n"
-                    "[3] Muitas (60%% do tamanho do grid\n\n"
+                    "[2] Normal (30%% do tamanho do grid)\n"
+                    "[3] Muitas (60%% do tamanho do grid)\n\n"
                     "[0] Voltar ");
 
     while (fscanf(stdin, "%d", &minesOp) != EOF && (minesOp < EXIT || minesOp > THIRD))
@@ -130,13 +136,13 @@ void defMinesMenu(int * mines, int *size) {
     switch(minesOp) {
 
     case FIRST:
-        *mines = *size * (POUCAS/100);
+        *mines = (*size**size) * (POUCAS/100);
         break;
     case SECOND:
-        *mines = *size * (NORMAL/100);
+        *mines = (*size**size) * (MEDIA/100);
         break;
     case THIRD:
-        *mines = *size * (MUITAS/100);
+        *mines = (*size**size) * (MUITAS/100);
         break;
     }
 }

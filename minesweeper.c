@@ -6,7 +6,15 @@
 #define TRUE 1
 #define FALSE 0
 
+#define INVALID_COORD -1
+
 #define GRID_MAX_SIZE 30
+
+typedef enum {
+    LOSE,
+    WIN,
+    UNDEFINED
+}GAME_RESULT;
 
 const char flag = '?';
 const char notClicked = '*';
@@ -18,31 +26,19 @@ void testFunction() {
 }
 
 // Retorna
-void buildGrid(GRID * grid, int size, int mines) {
-    int firstBuilding = !grid ? TRUE : FALSE;
-
-    // Verifica se é a primeira "construção" do grid. Se sim, ele aloca a memória.
-    // Sendo a primeira construção do grid, ele aloca a memória do campo com o tamanho máximo do grid.
-    // Esse tamanho máximo é para alocar, de uma só vez, todo o possível tamanho do grid.
-    // Dessa forma, não precisamos nos preocupar em alocar e realocar memória.
-    if(firstBuilding) {
-        GRID * grid = malloc(sizeof(grid));
-    }
+GRID * buildGrid(int size, int mines) {
+    GRID * grid = malloc(sizeof(grid));
 
     // Atribui ao Grid o tamanho e a quantidade de bombas que este deve conter;
     grid->size = size;
     grid->mines = mines;
 
-    if(firstBuilding) {
-        grid->fields = malloc(GRID_MAX_SIZE * sizeof(FIELD*));
-    }
+    // Constrói o grid;
+    grid->fields = malloc(size * sizeof(FIELD*));
 
     int i, j;
     for (i = 0; i < size; ++i) {
-
-        if(firstBuilding) {
-            grid->fields[i] = malloc(GRID_MAX_SIZE * sizeof(FIELD));
-        }
+        grid->fields[i] = malloc(size * sizeof(FIELD));
 
         // Atribui os valores padrões para cada campo;
         for (j = 0; j < size; ++j) {
@@ -196,4 +192,39 @@ void setNearMinesAround(FIELD * field, GRID * grid) {
             ++grid->fields[i][j].nearMines;
         }
     }
+}
+
+
+int launchGame(GRID * grid, int size, int mines) {
+
+    grid  = buildGrid(size, mines);
+
+    GAME_RESULT gameResult = UNDEFINED;
+
+    int pos_x = INVALID_COORD;
+    int pos_y = INVALID_COORD;
+
+    while(gameResult == UNDEFINED) {
+
+        showGrid(grid);
+
+        fprintf(stdout, "\nInsira as coordenadas do click: \n");
+
+        fprintf(stdout, "Cord. X: ");
+        while (fscanf(stdin, "%d", &pos_x) != EOF && (pos_x < 0 || pos_x > grid->size));
+
+        fprintf(stdout, "Cord. Y: ");
+        while (fscanf(stdin, "%d", &pos_y) != EOF && (pos_y < 0 || pos_y > grid->size));
+
+        if (pos_x == 5 && pos_y == 5) break;
+    }
+
+    if(gameResult == TRUE) {
+        fprintf(stdout, "\nYOU LOSE!\n");
+    }
+
+    else {
+        fprintf(stdout, "\nYOU LOSE!\n");
+    }
+    return gameResult;
 }

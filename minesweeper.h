@@ -79,4 +79,7 @@ void setNearMinesAround(FIELD * field, GRID *grid);
 void solver(FIELD * field, GRID * grid);
 
 
+int launchGame(GRID * grid, int size, int mines);
+
+
 #endif // MINESWEEPER_H

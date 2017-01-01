@@ -3,7 +3,31 @@
 
 typedef struct _GRID GRID; // Forward declaration
 
+typedef enum _OPTIONS {
+    EXIT,
+    FIRST,
+    SECOND,
+    THIRD,
+    FOURTH,
+    FIFTH,
+    NULL_OPTION
+}OPTIONS;
+
+typedef enum _SIZE {
+    PEQUENO = 5,
+    MEDIANO = 10,
+    GRANDE = 15
+}SIZE;
+
+typedef enum _MINES {
+    POUCAS = 15,
+    MEDIA = 30,
+    MUITAS = 60
+}MINES;
+
 void launchMenu(GRID *grid);
+
+void preGame(int * size, int * mines);
 
 void mainMenu(int * mainOp);
 
