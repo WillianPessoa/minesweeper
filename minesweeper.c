@@ -183,3 +183,45 @@ void setNearMinesAround(FIELD * field, GRID * grid) {
         }
     }
 }
+
+
+
+void clickIn(int pos_x, int pos_y, GRID * grid, char typeOfClick){
+
+	puts("Digite a linha e a coluna da posição que deseja clicar:");
+
+	scanf("%d %d" ,&grid->fields[pos_x][pos_y]);
+
+	puts("Digite 'O' para revelar o campo e 'M' para marcar o campo: ")
+	scanf("%c", &typeOfClick);
+
+	switch (typeOfClick){
+	
+	case M:
+		grid->fields[pos_x][pos_y].marked=TRUE;
+
+
+	case O:
+
+		if (grid->fields[pos_x][pos_y].mine==TRUE){
+
+			puts("GAME OVER!");
+
+			break;
+		}else{
+
+			if (grid->fields[pos_x][pos_y].nearMines>0){
+
+				grid->fields[pos_x][pos_y].revealed=TRUE;
+
+			}else if (grid->fields[pos_x][pos_y].nearMines==0){
+				
+				...
+			}			
+		}		
+	}
+						
+}
+
+
+

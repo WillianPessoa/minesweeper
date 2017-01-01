@@ -53,7 +53,7 @@ void showGridRevelead(GRID * grid);
  *
  * void clickIn(int pos_x, int pos_y, GRID * grid, typeOfClick type);
  */
-void clickIn(int pos_x, int pos_y, GRID * grid);
+void clickIn(int pos_x, int pos_y, GRID * grid,char typeOfClick);
 
 /** FUNÇÃO PLANTADORA DE MINAS */
 void plantMinesIn(GRID *grid, int minesToPlant);
