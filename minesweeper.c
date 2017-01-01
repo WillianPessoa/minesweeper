@@ -6,6 +6,16 @@
 #define TRUE 1
 #define FALSE 0
 
+#define INVALID_COORD -1
+
+#define GRID_MAX_SIZE 30
+
+typedef enum {
+    LOSE,
+    WIN,
+    UNDEFINED
+}GAME_RESULT;
+
 const char flag = '?';
 const char notClicked = '*';
 const char mined = 'M';
@@ -16,7 +26,7 @@ void testFunction() {
 }
 
 // Retorna
-GRID * makeAGrid(int size, int mines) {
+GRID * buildGrid(int size, int mines) {
     GRID * grid = malloc(sizeof(grid));
 
     // Atribui ao Grid o tamanho e a quantidade de bombas que este deve conter;
@@ -185,6 +195,7 @@ void setNearMinesAround(FIELD * field, GRID * grid) {
 }
 
 
+<<<<<<< HEAD
 
 void clickIn(int pos_x, int pos_y, GRID * grid, char typeOfClick){
 
@@ -225,3 +236,38 @@ void clickIn(int pos_x, int pos_y, GRID * grid, char typeOfClick){
 
 
 
+=======
+int launchGame(GRID * grid, int size, int mines) {
+
+    grid  = buildGrid(size, mines);
+
+    GAME_RESULT gameResult = UNDEFINED;
+
+    int pos_x = INVALID_COORD;
+    int pos_y = INVALID_COORD;
+
+    while(gameResult == UNDEFINED) {
+
+        showGrid(grid);
+
+        fprintf(stdout, "\nInsira as coordenadas do click: \n");
+
+        fprintf(stdout, "Cord. X: ");
+        while (fscanf(stdin, "%d", &pos_x) != EOF && (pos_x < 0 || pos_x > grid->size));
+
+        fprintf(stdout, "Cord. Y: ");
+        while (fscanf(stdin, "%d", &pos_y) != EOF && (pos_y < 0 || pos_y > grid->size));
+
+        if (pos_x == 5 && pos_y == 5) break;
+    }
+
+    if(gameResult == TRUE) {
+        fprintf(stdout, "\nYOU LOSE!\n");
+    }
+
+    else {
+        fprintf(stdout, "\nYOU LOSE!\n");
+    }
+    return gameResult;
+}
+>>>>>>> wpessoa/menu
