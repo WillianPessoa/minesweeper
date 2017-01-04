@@ -20,9 +20,9 @@ typedef enum _SIZE {
 }SIZE;
 
 typedef enum _MINES {
-    POUCAS = 15,
-    MEDIA = 30,
-    MUITAS = 60
+    POUCAS = 5,
+    MEDIA = 10,
+    MUITAS = 15
 }MINES;
 
 void launchMenu(GRID *grid);

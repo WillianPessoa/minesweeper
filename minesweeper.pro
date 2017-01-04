@@ -5,18 +5,13 @@ CONFIG -= qt
 
 SOURCES += main.c \
     minesweeper.c \
-<<<<<<< HEAD
+    menu.c \
+    records.c \
     tempo.c
 
 HEADERS += \
     minesweeper.h \
-    tempo.h
-=======
-    menu.c \
-    records.c
-
-HEADERS += \
-    minesweeper.h \
+    tempo.h \
     menu.h \
     records.h
->>>>>>> wpessoa/menu
+

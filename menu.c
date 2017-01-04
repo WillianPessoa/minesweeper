@@ -2,11 +2,12 @@
 
 #include "minesweeper.h"
 #include "records.h"
+#include "tempo.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
+
 
 void launchMenu(GRID * grid) {
 
@@ -14,6 +15,11 @@ void launchMenu(GRID * grid) {
 
     int size = MEDIANO;
     int mines = (size*size) * MEDIA/100;
+
+    GAME_RESULT gameResult;
+
+    time_t timer;
+    TEMPO * gameTime;
 
     while (mainOp != EXIT) {
 
@@ -26,11 +32,18 @@ void launchMenu(GRID * grid) {
 
         while (fscanf(stdin, "%d", &mainOp) != EOF && (mainOp < EXIT || mainOp > THIRD));
 
-        switch(mainOp) {
+        switch (mainOp) {
 
         case FIRST:
-            preGame(&size, &mines);
-            launchGame(grid, size, mines);
+            preGame(&size, &mines);     // Pré-jogo -> exibe configurações de jogo atuais.
+            startGameTimer(&timer); // Inicia o contador do tempo do jogo
+            gameResult = launchGame(grid, size, mines); // Inicia o jogo e retorna o resultado.
+            gameTime = calcGameTimer(&timer);   // Encerra o contador do tempo do jogo;
+            if (gameResult == WIN) {
+
+            }
+
+
             break;
         case SECOND:
             setupMenu(&size, &mines);
@@ -100,9 +113,9 @@ void defSizeMenu(int * size) {
     int sizeOp = NULL_OPTION;
 
     fprintf(stdout, "\n**************DEF_SIZE**************\n\n"
-                    "[1] Pequeno\n"
-                    "[2] Medio\n"
-                    "[3] Grande\n\n"
+                    "[1] Pequeno (5x5)\n"
+                    "[2] Medio (10x10)\n"
+                    "[3] Grande (15x15)\n\n"
                     "[0] Voltar ");
 
     while (fscanf(stdin, "%d", &sizeOp) != EOF && (sizeOp < EXIT || sizeOp > THIRD));
@@ -136,13 +149,13 @@ void defMinesMenu(int * mines, int *size) {
     switch(minesOp) {
 
     case FIRST:
-        *mines = (*size**size) * (POUCAS/100);
+        *mines = ((*size)*(*size)) * (POUCAS/100);
         break;
     case SECOND:
-        *mines = (*size**size) * (MEDIA/100);
+        *mines = ((*size)*(*size)) * (MEDIA/100);
         break;
     case THIRD:
-        *mines = (*size**size) * (MUITAS/100);
+        *mines = ((*size)*(*size)) * (MUITAS/100);
         break;
     }
 }

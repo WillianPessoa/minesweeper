@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #define TRUE 1
 #define FALSE 0
@@ -10,37 +11,37 @@
 
 #define GRID_MAX_SIZE 30
 
-typedef enum {
-    LOSE,
-    WIN,
-    UNDEFINED
-}GAME_RESULT;
-
 const char flag = '?';
 const char notClicked = '*';
 const char mined = 'M';
 
-//EXEMPLO: Fun√ß√£o defina neste arquivo. Veja "main.c".
-void testFunction() {
-   fprintf(stdout, "It's works!\n");
+//FunÁ„o que remove o "\n" chato.
+void clear_newlines(void)
+{
+    int c;
+    do
+    {
+        c = getchar();
+    } while (c != '\n' && c != EOF);
 }
 
-// Retorna
+// Retorna um grid construÌdo com o tamanho m·ximo
 GRID * buildGrid(int size, int mines) {
     GRID * grid = malloc(sizeof(grid));
 
     // Atribui ao Grid o tamanho e a quantidade de bombas que este deve conter;
     grid->size = size;
     grid->mines = mines;
+    grid->revelead = size - mines;
 
-    // Constr√≥i o grid;
+    // ConstrÛi o grid;
     grid->fields = malloc(size * sizeof(FIELD*));
 
     int i, j;
     for (i = 0; i < size; ++i) {
         grid->fields[i] = malloc(size * sizeof(FIELD));
 
-        // Atribui os valores padr√µes para cada campo;
+        // Atribui os valores padrıes para cada campo;
         for (j = 0; j < size; ++j) {
             grid->fields[i][j].pos_x = i;
             grid->fields[i][j].pos_y = j;
@@ -60,27 +61,39 @@ void showGrid(GRID * grid) {
     fprintf(stdout, "\n***************** GRID *****************\n\n");
 
     for (i = 0; i < grid->size; ++i) {
+
+        if (i == 0) {
+            int k;
+            fprintf(stdout, "  ");
+            for (k = 0; k < grid->size; ++k) {
+                fprintf(stdout, " %d ", k);
+            }
+            fprintf(stdout, "\n");
+        }
+
+        fprintf(stdout, "%d ", i);
+
         for (j = 0; j < grid->size; ++j) {
 
-            // Se o campo estiver marcado, exibe a sinaliza√ß√£o de marca√ß√£o;
+            // Se o campo estiver marcado, exibe a sinalizaÁ„oo de marcaÁ„o;
             if (grid->fields[i][j].marked) {
                 fprintf(stdout, "[%c]", flag);
             }
 
-            // Se o campo j√° foi revelado...;
+            // Se o campo j· foi revelado...;
             else if (grid->fields[i][j].revealed) {
 
-                //... e se o campo possuir bombas pr√≥ximas, exibe a quantidade;
+                //... e se o campo possuir bombas prÛximas, exibe a quantidade;
                 if(grid->fields[i][j].nearMines != 0) {
-                    fprintf(stdout, "[%d] ", grid->fields[i][j].nearMines);
+                    fprintf(stdout, "[%d]", grid->fields[i][j].nearMines);
                 }
-                //... e se n√£o possuir bombas pr√≥ximas, exibe a sinaliza√ß√£o de um campo vazio;
+                //... e se n„o possuir bombas pr√≥ximas, exibe a sinalizaÁ„o de um campo vazio;
                 else {
                     fprintf(stdout, "[ ]");
                 }
             }
 
-            //Se n√£o tiver sido clicado, exibe a sinaliza√ß√£o de n√£o clicado.
+            //Se n„oo tiver sido clicado, exibe a sinaliza√ß√£o de n√£o clicado.
             else {
                 fprintf(stdout, "[%c]", notClicked);
             }
@@ -96,6 +109,18 @@ void showGridRevelead(GRID * grid) {
     fprintf(stdout, "\n***************** GRID *****************\n\n");
 
     for (i = 0; i < grid->size; ++i) {
+
+        if (i == 0) {
+            int k;
+            fprintf(stdout, "  ");
+            for (k = 0; k < grid->size; ++k) {
+                fprintf(stdout, " %d ", k);
+            }
+            fprintf(stdout, "\n");
+        }
+
+        fprintf(stdout, "%d ", i);
+
         for (j = 0; j < grid->size; ++j) {
 
             if (grid->fields[i][j].mine == TRUE) {
@@ -114,7 +139,7 @@ void showGridRevelead(GRID * grid) {
 }
 
 // Planta a quantidade de minas no grid aleatoriamente.
-void plantMinesIn(GRID *grid, int minesToPlant) {
+void plantMinesIn(GRID *grid, int minesToPlant, int except_pos_x, int except_pos_y) {
     srand(time(NULL));
 
     int size = grid->size;
@@ -127,6 +152,11 @@ void plantMinesIn(GRID *grid, int minesToPlant) {
     for (minesPlanted = 0; minesPlanted < minesToPlant; ++minesPlanted) {
         pos_x = rand() % size;
         pos_y = rand() % size;
+
+        if (pos_x == except_pos_x && pos_y == except_pos_y) {
+            --minesPlanted;
+            continue;
+        }
 
         if (grid->fields[pos_x][pos_y].mine == FALSE) {
             grid->fields[pos_x][pos_y].mine = TRUE;
@@ -175,14 +205,14 @@ void checkNearMines(FIELD * field, GRID * grid) {
 void setNearMinesAround(FIELD * field, GRID * grid) {
     int i, j;
 
-    //Definindo minimos e m√°ximos
+    //Definindo minimos e m·ximos
     int min_x = field->pos_x == 0 ? field->pos_x : field->pos_x-1;
     int max_x = field->pos_x == grid->size-1 ? field->pos_x :field->pos_x+1;
 
     int min_y = field->pos_y == 0 ? field->pos_y : field->pos_y-1;
     int max_y = field->pos_y == grid->size-1 ? field->pos_y :field->pos_y+1;
 
-    //Percorre o entorno de acordo com os m√≠nimos e m√°ximos encontrados.
+    //Percorre o entorno de acordo com os mÌ≠nimos e m·ximos encontrados.
     for (i = min_x; i <= max_x; ++i) {
         for (j = min_y; j <=max_y; ++j) {
             if (i == field->pos_x && j == field->pos_y) {
@@ -195,79 +225,211 @@ void setNearMinesAround(FIELD * field, GRID * grid) {
 }
 
 
-<<<<<<< HEAD
+int clickIn(GRID * grid, int pos_x, int pos_y, char typeOfClick) {
 
-void clickIn(int pos_x, int pos_y, GRID * grid, char typeOfClick){
+    static int clickCount = 0;
 
-	puts("Digite a linha e a coluna da posiÁ„o que deseja clicar:");
+    if (clickCount == 0) {
+        plantMinesIn(grid, grid->mines, pos_x, pos_y);
+    }
+    ++clickCount;
 
-	scanf("%d %d" ,&grid->fields[pos_x][pos_y]);
+    switch (typeOfClick) {
 
-	puts("Digite 'O' para revelar o campo e 'M' para marcar o campo: ")
-	scanf("%c", &typeOfClick);
+    case 'r':
+        return rreveal(grid, pos_x, pos_y);
+        break;
 
-	switch (typeOfClick){
-	
-	case M:
-		grid->fields[pos_x][pos_y].marked=TRUE;
+    case 'm':
+        markField(grid, pos_x, pos_y);
+        break;
+
+    case 'o':
+        return LOSE;
+        break;
+
+    default:
+        fprintf(stdout, "\n Comando %c eh invalido!\n\n", typeOfClick);
+        break;
+    }
+
+    return UNDEFINED;
+}
+
+void markField(GRID * grid, int pos_x, int pos_y) {
+
+    if(grid->fields[pos_x][pos_y].revealed == FALSE) {
+
+        if (grid->fields[pos_x][pos_y].marked == FALSE) {
+            grid->fields[pos_x][pos_y].marked = TRUE;
+        } else  {
+            grid->fields[pos_x][pos_y].marked = FALSE;
+        }
+    }
+}
+
+int revealField(GRID * grid, int pos_x, int pos_y) {
 
 
-	case O:
+    if (grid->fields[pos_x][pos_y].marked == TRUE) {
+        return UNDEFINED;
+    }
 
-		if (grid->fields[pos_x][pos_y].mine==TRUE){
+    if(grid->fields[pos_x][pos_y].revealed == TRUE) {
+        return UNDEFINED;
+    } else {
+        grid->fields[pos_x][pos_y].revealed = TRUE;
+        --grid->revelead;
+        if(grid->revelead == 0) {
+            return WIN;
+        }
+    }
 
-			puts("GAME OVER!");
+    //Se o campo contiver uma bomba, fim de jogo.
+    if (grid->fields[pos_x][pos_y].mine == TRUE) {
+        return LOSE;
+    } else {
+        if(grid->fields[pos_x][pos_y].nearMines == 0) {
+            revealNext(grid, pos_x, pos_y);
+        }
+    }
+    return UNDEFINED;
+}
 
-			break;
-		}else{
+void revealNext(GRID * grid, int pos_x, int pos_y) {
 
-			if (grid->fields[pos_x][pos_y].nearMines>0){
+    int i, j;
 
-				grid->fields[pos_x][pos_y].revealed=TRUE;
+    //Definindo minimos e m·ximos
+    int min_x = pos_x == 0 ? pos_x : pos_x-1;
+    int max_x = pos_x == grid->size-1 ? pos_x : pos_x+1;
 
-			}else if (grid->fields[pos_x][pos_y].nearMines==0){
-				
-				...
-			}			
-		}		
-	}
-						
+    int min_y = pos_y == 0 ? pos_y : pos_y-1;
+    int max_y = pos_y == grid->size-1 ? pos_y : pos_y+1;
+
+    //Percorre o entorno de acordo com os mÌ≠nimos e m·ximos encontrados.
+    for (i = min_x; i <= max_x; ++i) {
+        for (j = min_y; j <=max_y; ++j) {
+            if (i == pos_x && j == pos_y) {
+                continue;
+            }
+
+            if (grid->fields[i][j].revealed == FALSE) {
+                revealField(grid, i, j);
+                if (grid->fields[i][j].nearMines != 0) {
+                    revealNext(grid, i, j);
+                }
+            }
+        }
+    }
+}
+
+void getValidsCommands(GRID * grid, int * pos_x, int * pos_y, char * typeOfClick) {
+
+    TYPE_OF_CLICK click;
+
+    fprintf(stdout, "Que tipo de Click?\n"
+                    "[1] Revelar\n"
+                    "[2] Marcar\n"
+                    "[0] Desistir\n\n"
+                    "Click: ");
+
+    while (fscanf(stdin, "%u", &click) != EOF && (click < GIVE_UP || click > MARK_CLICK));
+    clear_newlines();
+
+    switch (click) {
+
+    case GIVE_UP:
+        *typeOfClick = 'o'; // Desiste.
+        return;
+    case REVEAL_CLICK:
+        *typeOfClick = 'r'; // Desiste.
+        break;
+    case MARK_CLICK:
+        *typeOfClick = 'm'; // Desiste.
+        break;
+    }
+
+    fprintf(stdout, "\nInsira as coordenadas do click: \n");
+
+    fprintf(stdout, "Cord. X: ");
+    while (fscanf(stdin, "%d", pos_x) != EOF && (*pos_x < 0 || *pos_x > grid->size-1));
+    clear_newlines();
+
+    fprintf(stdout, "Cord. Y: ");
+    while (fscanf(stdin, "%d", pos_y) != EOF && (*pos_y < 0 || *pos_y > grid->size-1));
+    clear_newlines();
+}
+
+int launchGame(GRID * grid, int size, int mines) {
+
+    //ConstrÛi o grid
+    grid  = buildGrid(size, mines);
+
+    //Vari·vel que armazenar· o resultado o jogo
+    GAME_RESULT gameResult = UNDEFINED;
+
+    //Inicializando as vari·veis das coordenadas com valores inv·lidos.
+    int pos_x = INVALID_COORD;
+    int pos_y = INVALID_COORD;
+    char typeOfClick = '0';
+
+    //Enquanto o jogo n„o tiver um resultado definido...
+    while(gameResult == UNDEFINED) {
+
+        showGrid(grid); // ...exibe o grid,...
+        showGridRevelead(grid);
+
+        getValidsCommands(grid, &pos_x, &pos_y, &typeOfClick); // ... recebe os comandos v·lidos (coordenadas e tipo do click)...
+
+        gameResult = clickIn(grid, pos_x, pos_y, typeOfClick); // ... e realiza o click no grid aplicando o solver, se necess·rio.
+    }
+
+    showGridRevelead(grid);
+
+    return gameResult;
 }
 
 
+int rreveal(GRID * grid, int pos_x, int pos_y) {
 
-=======
-int launchGame(GRID * grid, int size, int mines) {
-
-    grid  = buildGrid(size, mines);
-
-    GAME_RESULT gameResult = UNDEFINED;
-
-    int pos_x = INVALID_COORD;
-    int pos_y = INVALID_COORD;
-
-    while(gameResult == UNDEFINED) {
-
-        showGrid(grid);
-
-        fprintf(stdout, "\nInsira as coordenadas do click: \n");
-
-        fprintf(stdout, "Cord. X: ");
-        while (fscanf(stdin, "%d", &pos_x) != EOF && (pos_x < 0 || pos_x > grid->size));
-
-        fprintf(stdout, "Cord. Y: ");
-        while (fscanf(stdin, "%d", &pos_y) != EOF && (pos_y < 0 || pos_y > grid->size));
-
-        if (pos_x == 5 && pos_y == 5) break;
+    if (grid->fields[pos_x][pos_y].revealed == TRUE) {
+        return UNDEFINED;
     }
 
-    if(gameResult == TRUE) {
-        fprintf(stdout, "\nYOU LOSE!\n");
+    else if (grid->fields[pos_x][pos_y].mine == TRUE) {
+        return LOSE;
+    }
+
+    else if (grid->fields[pos_x][pos_y].nearMines != 0) {
+        grid->fields[pos_x][pos_y].revealed = TRUE;
+        return UNDEFINED;
     }
 
     else {
-        fprintf(stdout, "\nYOU LOSE!\n");
+        grid->fields[pos_x][pos_y].revealed = TRUE;
+        recursive_reveal(grid, pos_x, pos_y);
     }
-    return gameResult;
+    return UNDEFINED;
 }
->>>>>>> wpessoa/menu
+
+void recursive_reveal(GRID * grid, int pos_x, int pos_y) {
+    int i, j;
+
+    //Definindo minimos e m·ximos
+    int min_x = pos_x == 0 ? pos_x : pos_x-1;
+    int max_x = pos_x == grid->size-1 ? pos_x : pos_x+1;
+
+    int min_y = pos_y == 0 ? pos_y : pos_y-1;
+    int max_y = pos_y == grid->size-1 ? pos_y : pos_y+1;
+
+    //Percorre o entorno de acordo com os mÌ≠nimos e m·ximos encontrados.
+    for (i = min_x; i <= max_x; ++i) {
+        for (j = min_y; j <=max_y; ++j) {
+            if (i == pos_x && j == pos_y) {
+                continue;
+            }
+            rreveal(grid, i, j);
+        }
+    }
+}
