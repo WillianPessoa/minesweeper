@@ -24,5 +24,5 @@
       
       
 Referências:  http://exame.abril.com.br/tecnologia/microsoft-criou-o-jogo-paciencia-com-um-unico-objetivo/;
-              https://play.google.com/store/apps/details?id=com.jurajkusnier.minesweeper&hl=en;
+              https://play.google.com/store/apps/details?id=com.jurajkusnier.minesweeper&hl=en; 
               http://pt.wikihow.com/Jogar-Campo-Minado;
