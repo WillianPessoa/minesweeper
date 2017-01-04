@@ -29,7 +29,7 @@ typedef struct _GRID {
     FIELD ** fields;// Matriz de estruturas do tipo FIELD;
     int size;       // Tamanho do grid. Contém o tamanho de FIELDs por em cada linha e linhas de mesmo tamanho.
     int mines;      // Quantidade de minas no grid;
-    int revelead;
+    int toReveal;
 }GRID;
 
 /** "CONSTRUTOR" DO GRID */
@@ -72,6 +72,6 @@ int launchGame(GRID * grid, int size, int mines);
 /** VAI QUE VAI */
 void recursive_reveal(GRID * grid, int pos_x, int pos_y);
 
-int rreveal(GRID * grid, int pos_x, int pos_y);
+int rreveal(GRID * grid, int pos_x, int pos_y, int isRecursive);
 
 #endif // MINESWEEPER_H

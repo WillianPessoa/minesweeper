@@ -14,7 +14,7 @@ void launchMenu(GRID * grid) {
     int mainOp = NULL_OPTION;
 
     int size = MEDIANO;
-    int mines = (size*size) * MEDIA/100;
+    int mines = (size*size) * MEDIA/(double)100;
 
     GAME_RESULT gameResult;
 
@@ -40,10 +40,8 @@ void launchMenu(GRID * grid) {
             gameResult = launchGame(grid, size, mines); // Inicia o jogo e retorna o resultado.
             gameTime = calcGameTimer(&timer);   // Encerra o contador do tempo do jogo;
             if (gameResult == WIN) {
-
+                //ASSINALAR RECORDS
             }
-
-
             break;
         case SECOND:
             setupMenu(&size, &mines);
@@ -139,23 +137,23 @@ void defMinesMenu(int * mines, int *size) {
     int minesOp = NULL_OPTION;
 
     fprintf(stdout, "\n**************DEF_MINES**************\n\n"
-                    "[1] Poucas (10%% do tamanho do grid)\n"
-                    "[2] Normal (30%% do tamanho do grid)\n"
-                    "[3] Muitas (60%% do tamanho do grid)\n\n"
+                    "[1] Poucas (5%% do tamanho do grid)\n"
+                    "[2] Normal (10%% do tamanho do grid)\n"
+                    "[3] Muitas (15%% do tamanho do grid)\n\n"
                     "[0] Voltar ");
 
-    while (fscanf(stdin, "%d", &minesOp) != EOF && (minesOp < EXIT || minesOp > THIRD))
+    while (fscanf(stdin, "%d", &minesOp) != EOF && (minesOp < EXIT || minesOp > THIRD));
 
     switch(minesOp) {
 
     case FIRST:
-        *mines = ((*size)*(*size)) * (POUCAS/100);
+        *mines = ((*size)*(*size)) * ((double)POUCAS/100);
         break;
     case SECOND:
-        *mines = ((*size)*(*size)) * (MEDIA/100);
+        *mines = ((*size)*(*size)) * ((double)MEDIA/100);
         break;
     case THIRD:
-        *mines = ((*size)*(*size)) * (MUITAS/100);
+        *mines = ((*size)*(*size)) * ((double)MUITAS/100);
         break;
     }
 }
