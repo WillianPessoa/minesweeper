@@ -338,9 +338,14 @@ int launchGame(GRID * grid, int size, int mines) {
     while(gameResult == UNDEFINED) {
 
         showGrid(grid); // ...exibe o grid,...
-        showGridRevelead(grid);
 
         getValidsCommands(grid, &pos_x, &pos_y, &typeOfClick); // ... recebe os comandos validos (coordenadas e tipo do click)...
+
+        if (typeOfClick == 'o') {
+            gameResult = LOSE;
+            break;
+        }
+
 
         gameResult = clickIn(grid, pos_x, pos_y, typeOfClick); // ... e realiza o click no grid aplicando o solver, se necessario.
 
@@ -349,17 +354,17 @@ int launchGame(GRID * grid, int size, int mines) {
         }
     }
 
+    showGridRevelead(grid);
+
     switch (gameResult) {
 
     case WIN:
-        fprintf(stdout, "\nVOCÊ GANHOU!\n");
+        fprintf(stdout, "\nVOCE GANHOU!\n");
         break;
     case LOSE:
-        fprintf(stdout, "\nVOCÊ PERDEU!\n");
+        fprintf(stdout, "\nVOCE PERDEU!\n");
         break;
     }
-
-    showGridRevelead(grid);
 
     return gameResult;
 }
