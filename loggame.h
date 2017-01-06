@@ -1,5 +1,5 @@
-#ifndef RECORDS_H
-#define RECORDS_H
+#ifndef LOGGAME_H
+#define LOGGAME_H
 
 /** Forward Declarations */
 typedef enum _SIZE SIZE;
@@ -15,7 +15,7 @@ typedef enum _GAME_MODE{
 }GAME_MODE;
 
 /** EXIBE O LOG/RECORDS DO JOGO */
-void records();
+void logGame();
 
 /** VERIFICA SE O ARQUIVO DE LOG EXISTE */
 int logFileExists();
@@ -24,6 +24,6 @@ int logFileExists();
 GAME_MODE getMode(int *size, int *mines);
 
 /** ESCREVE O RECORD NO GRID */
-void writeRecord(TEMPO *gameTime, char nome[], int * size, int * mines);
+void writeInLog(TEMPO *gameTime, char nome[], int * size, int * mines);
 
-#endif // RECORDS_H
+#endif // LOGGAME_H

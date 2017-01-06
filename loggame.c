@@ -15,7 +15,7 @@
 const char logFileName[] = "logGame.txt";
 const char * nameOfTypeOfGameModes[] = {"VERY_EASY", "EASY", "NORMAL", "HARD", "VERY_HARD"};
 
-void records() {
+void logGame() {
     FILE * logFile = NULL;
 
     if (!logFileExists()) {
@@ -59,7 +59,7 @@ GAME_MODE getMode(int * size, int * mines) {
     return EASY;
 }
 
-void writeRecord(TEMPO * gameTime, char nome[], int *size, int *mines) {
+void writeInLog(TEMPO * gameTime, char nome[], int *size, int *mines) {
 
     GAME_MODE gameMode = getMode(size, mines);
 

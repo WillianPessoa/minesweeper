@@ -1,7 +1,7 @@
 #include "menu.h"
 
 #include "minesweeper.h"
-#include "records.h"
+#include "loggame.h"
 #include "tempo.h"
 
 #include <stdio.h>
@@ -44,14 +44,15 @@ void launchMenu(GRID * grid) {
             if (gameResult == LOSE) {
                 fprintf(stdout, "\nVoce ganhou! Digite seu nome para ser adicionado ao hall da fama: ");
                 fgets(name, SIZE_NAME, stdin);
-                writeRecord(gameTime, name, &size, &mines);
+                writeInLog(gameTime, name, &size, &mines);
             }
             break;
         case SECOND:
             setupMenu(&size, &mines);
             break;
         case THIRD:
-            records();
+            fprintf(stdout, "\n\n*************** LOG GAME ***************\n\n");
+            logGame();
             break;
         }
     }
