@@ -15,25 +15,25 @@ typedef enum {
 
 /** ESTRUTURA DA UNIDADE CAMPO */
 typedef struct _FIELD {
-    int pos_x;      // Posição no eixo x;
-    int pos_y;      // Posição no eixo y;
-    int mine;       // Indicador de bomba neste campo (true or false - definidas no .c);
-    int revealed;   // Indicador de revelação do campo (true or false - definidas no .c);
-    int marked;     // Indicador de marcação (true or false - definidas no .c);
-    int nearMines;  // minas próximas;
+    int pos_x; // Posição no eixo x;
+    int pos_y; // Posição no eixo y;
+    int mine; // Indicador de bomba neste campo (true or false - definidas no .c);
+    int revealed; // Indicador de revelação do campo (true or false - definidas no .c);
+    int marked; // Indicador de marcação (true or false - definidas no .c);
+    int nearMines; // minas próximas;
 
 }FIELD;
 
 /** ESTRUTURA DO COLETIVO DE CAMPOS */
 typedef struct _GRID {
-    FIELD ** fields;// Matriz de estruturas do tipo FIELD;
-    int size;       // Tamanho do grid. Contém o tamanho de FIELDs por em cada linha e linhas de mesmo tamanho.
-    int mines;      // Quantidade de minas no grid;
+    FIELD * * fields; // Matriz de estruturas do tipo FIELD;
+    int size; // Tamanho do grid. Contém o tamanho de FIELDs por em cada linha e linhas de mesmo tamanho.
+    int mines; // Quantidade de minas no grid;
     int toReveal;
 }GRID;
 
 /** "CONSTRUTOR" DO GRID */
-void buildGridwith(GRID *grid, int size, int mines);
+void buildGridwith(GRID * grid, int size, int mines);
 
 /** EXIBE O GRID NA TELA DO CONSOLE */
 void showGrid(GRID * grid);
@@ -51,16 +51,16 @@ void markField(GRID * grid, int pos_x, int pos_y);
 int revealField(GRID * grid, int pos_x, int pos_y);
 
 /** FUNÇÃO PLANTADORA DE MINAS */
-void plantMinesIn(GRID *grid, int minesToPlant, int except_pos_x, int except_pos_y);
+void plantMinesIn(GRID * grid, int minesToPlant, int except_pos_x, int except_pos_y);
 
 /** FUNÇÃO PARA CALCULAR MINAS PRÓXIMAS */
-void checkNearMines(FIELD * field, GRID *grid);
+void checkNearMines(FIELD * field, GRID * grid);
 
 /** FUNÇÃO INCREMENTAR O ATRIBUTO "MINAS PRÓXIMAS" EM TORNO DE UMA BOMBA SETADA */
-void setNearMinesAround(FIELD * field, GRID *grid);
+void setNearMinesAround(FIELD * field, GRID * grid);
 
 /** FUNÇÃO QUE RECEBE COORDENADAS E TIPO DE CLICK VÁLIDOS */
-void getValidsCommands(GRID * grid, int *pos_x, int *pos_y, char *typeOfClick);
+void getValidsCommands(GRID * grid, int * pos_x, int * pos_y, char * typeOfClick);
 
 /** FUNÇÃO "SOLUCIONADORA" (FALTOU CRIATIVIDADE AQUI) */
 void solver(GRID * grid, int pos_x, int pos_y);

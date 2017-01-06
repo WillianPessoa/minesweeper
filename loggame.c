@@ -13,7 +13,13 @@
 #define TYPES_SIZE 5
 
 const char logFileName[] = "logGame.txt";
-const char * nameOfTypeOfGameModes[] = {"VERY_EASY", "EASY", "NORMAL", "HARD", "VERY_HARD"};
+const char * nameOfTypeOfGameModes[] = {
+    "VERY_EASY",
+    "EASY",
+    "NORMAL",
+    "HARD",
+    "VERY_HARD"
+};
 
 void logGame() {
     FILE * logFile = NULL;
@@ -26,7 +32,7 @@ void logGame() {
     logFile = fopen(logFileName, "r+");
 
     int c;
-    while((c = getc(logFile)) != EOF) {
+    while ((c = getc(logFile)) != EOF) {
         putchar(c);
     }
     fclose(logFile);
@@ -35,7 +41,7 @@ void logGame() {
 int logFileExists() {
     FILE * logFile = fopen(logFileName, "r");
 
-    if(!logFile) {
+    if (!logFile) {
         return FALSE;
     }
 
@@ -45,21 +51,21 @@ int logFileExists() {
 
 GAME_MODE getMode(int * size, int * mines) {
 
-    if (*size == GRANDE && *mines == POUCAS) {
+    if ( *size == GRANDE && *mines == POUCAS) {
         return VERY_EASY;
-    } else if ((*size == GRANDE && *mines == MEDIA) || (*size == MEDIANO && *mines == POUCAS)) {
+    } else if (( *size == GRANDE && *mines == MEDIA) || ( *size == MEDIANO && *mines == POUCAS)) {
         return EASY;
-    } else if (*size == MEDIANO && *mines == MEDIA) {
+    } else if ( *size == MEDIANO && *mines == MEDIA) {
         return NORMAL;
-    } else if ((*size == MEDIANO && *mines == MUITAS) || (*size == PEQUENO && *mines == MEDIA)) {
+    } else if (( *size == MEDIANO && *mines == MUITAS) || ( *size == PEQUENO && *mines == MEDIA)) {
         return HARD;
-    } else if (*size == PEQUENO && *mines == MUITAS) {
+    } else if ( *size == PEQUENO && *mines == MUITAS) {
         return VERY_HARD;
     }
     return EASY;
 }
 
-void writeInLog(TEMPO * gameTime, char nome[], int *size, int *mines) {
+void writeInLog(TEMPO * gameTime, char nome[], int * size, int * mines) {
 
     GAME_MODE gameMode = getMode(size, mines);
 
@@ -77,5 +83,3 @@ void writeInLog(TEMPO * gameTime, char nome[], int *size, int *mines) {
     printTimeInFile(logFile, gameTime);
     fclose(logFile);
 }
-
-

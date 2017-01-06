@@ -6,7 +6,7 @@ typedef enum _SIZE SIZE;
 typedef enum _MINES MINES;
 typedef struct _TEMPO TEMPO;
 
-typedef enum _GAME_MODE{
+typedef enum _GAME_MODE {
     VERY_EASY,  // TAM: GRANDE / MINAS: POUCAS
     EASY,       // TAM: GRANDE / MINAS: MEDIA || TAM: MEDIANO / MINAS: POUCAS
     NORMAL,     // TAM: MEDIANO / MINAS: MEDIA
@@ -21,9 +21,9 @@ void logGame();
 int logFileExists();
 
 /** RETORNA O MODO DE JOGO BASEADO NA QUANTIDADE DE MINAS E TAMANHO DO GRID */
-GAME_MODE getMode(int *size, int *mines);
+GAME_MODE getMode(int * size, int * mines);
 
 /** ESCREVE O RECORD NO GRID */
-void writeInLog(TEMPO *gameTime, char nome[], int * size, int * mines);
+void writeInLog(TEMPO * gameTime, char nome[], int * size, int * mines);
 
 #endif // LOGGAME_H

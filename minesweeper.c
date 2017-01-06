@@ -16,11 +16,9 @@ const char notClicked = '*';
 const char mined = 'M';
 
 //Fun??o que remove o "\n" chato.
-void clear_newlines(void)
-{
+void clear_newlines(void) {
     int c;
-    do
-    {
+    do {
         c = getchar();
     } while (c != '\n' && c != EOF);
 }
@@ -35,11 +33,11 @@ GRID * buildGrid(int size, int mines) {
     grid->toReveal = size - mines;
 
     // Constr?i o grid;
-    grid->fields = malloc(size * sizeof(FIELD*));
+    grid->fields = malloc(size * sizeof(FIELD * ));
 
     int i, j;
     for (i = 0; i < size; ++i) {
-        grid->fields[i] = malloc(size * sizeof(FIELD));
+        grid-> fields[i] = malloc(size * sizeof(FIELD));
 
         // Atribui os valores padr?es para cada campo;
         for (j = 0; j < size; ++j) {
@@ -92,7 +90,7 @@ void showGrid(GRID * grid) {
             else if (grid->fields[i][j].revealed) {
 
                 //... e se o campo possuir bombas pr?ximas, exibe a quantidade;
-                if(grid->fields[i][j].nearMines != 0) {
+                if (grid->fields[i][j].nearMines != 0) {
                     fprintf(stdout, "[%d]", grid->fields[i][j].nearMines);
                 }
                 //... e se n?o possuir bombas próximas, exibe a sinaliza??o de um campo vazio;
@@ -141,11 +139,9 @@ void showGridRevelead(GRID * grid) {
 
             if (grid->fields[i][j].mine == TRUE) {
                 fprintf(stdout, "[%c]", mined);
-            }
-            else if (grid->fields[i][j].nearMines != 0) {
+            } else if (grid->fields[i][j].nearMines != 0) {
                 fprintf(stdout, "[%d]", grid->fields[i][j].nearMines);
-            }
-            else {
+            } else {
                 fprintf(stdout, "[ ]");
             }
         }
@@ -155,7 +151,7 @@ void showGridRevelead(GRID * grid) {
 }
 
 // Planta a quantidade de minas no grid aleatoriamente.
-void plantMinesIn(GRID *grid, int minesToPlant, int except_pos_x, int except_pos_y) {
+void plantMinesIn(GRID * grid, int minesToPlant, int except_pos_x, int except_pos_y) {
     srand(time(NULL));
 
     int size = grid->size;
@@ -177,8 +173,7 @@ void plantMinesIn(GRID *grid, int minesToPlant, int except_pos_x, int except_pos
         if (grid->fields[pos_x][pos_y].mine == FALSE) {
             grid->fields[pos_x][pos_y].mine = TRUE;
             setNearMinesAround(&grid->fields[pos_x][pos_y], grid);
-        }
-        else {
+        } else {
             --minesPlanted;
             continue;
         }
@@ -196,11 +191,11 @@ void checkNearMines(FIELD * field, GRID * grid) {
     field->nearMines = 0;
 
     //Definindo minimos e máximos
-    int min_x = field->pos_x == 0 ? field->pos_x : field->pos_x-1;
-    int max_x = field->pos_x == grid->size-1 ? field->pos_x :field->pos_x+1;
+    int min_x = field->pos_x == 0 ? field->pos_x : field->pos_x - 1;
+    int max_x = field->pos_x == grid->size - 1 ? field->pos_x : field->pos_x + 1;
 
-    int min_y = field->pos_y == 0 ? field->pos_y : field->pos_y-1;
-    int max_y = field->pos_y == grid->size-1 ? field->pos_y :field->pos_y+1;
+    int min_y = field->pos_y == 0 ? field->pos_y : field->pos_y - 1;
+    int max_y = field->pos_y == grid->size - 1 ? field->pos_y : field->pos_y + 1;
 
     // Percorre o entorno...
     for (i = min_x; i <= max_x; ++i) {
@@ -221,16 +216,16 @@ void checkNearMines(FIELD * field, GRID * grid) {
 void setNearMinesAround(FIELD * field, GRID * grid) {
     int i, j;
 
-    //Definindo minimos e m?ximos
-    int min_x = field->pos_x == 0 ? field->pos_x : field->pos_x-1;
-    int max_x = field->pos_x == grid->size-1 ? field->pos_x :field->pos_x+1;
+    //Definindo minimos e maximos
+    int min_x = field->pos_x == 0 ? field->pos_x : field->pos_x - 1;
+    int max_x = field->pos_x == grid->size - 1 ? field->pos_x : field->pos_x + 1;
 
-    int min_y = field->pos_y == 0 ? field->pos_y : field->pos_y-1;
-    int max_y = field->pos_y == grid->size-1 ? field->pos_y :field->pos_y+1;
+    int min_y = field->pos_y == 0 ? field->pos_y : field->pos_y - 1;
+    int max_y = field->pos_y == grid->size-1 ? field->pos_y : field->pos_y + 1;
 
-    //Percorre o entorno de acordo com os m??nimos e m?ximos encontrados.
+    //Percorre o entorno de acordo com os minimos e maximos encontrados.
     for (i = min_x; i <= max_x; ++i) {
-        for (j = min_y; j <=max_y; ++j) {
+        for (j = min_y; j <= max_y; ++j) {
             if (i == field->pos_x && j == field->pos_y) {
                 continue;
             }
@@ -239,7 +234,6 @@ void setNearMinesAround(FIELD * field, GRID * grid) {
         }
     }
 }
-
 
 int clickIn(GRID * grid, int pos_x, int pos_y, char typeOfClick) {
 
@@ -274,11 +268,11 @@ int clickIn(GRID * grid, int pos_x, int pos_y, char typeOfClick) {
 
 void markField(GRID * grid, int pos_x, int pos_y) {
 
-    if(grid->fields[pos_x][pos_y].revealed == FALSE) {
+    if (grid->fields[pos_x][pos_y].revealed == FALSE) {
 
         if (grid->fields[pos_x][pos_y].marked == FALSE) {
             grid->fields[pos_x][pos_y].marked = TRUE;
-        } else  {
+        } else {
             grid->fields[pos_x][pos_y].marked = FALSE;
         }
     }
@@ -289,42 +283,42 @@ void getValidsCommands(GRID * grid, int * pos_x, int * pos_y, char * typeOfClick
     TYPE_OF_CLICK click;
 
     fprintf(stdout, "Que tipo de Click?\n"
-                    "[1] Revelar\n"
-                    "[2] Marcar\n"
-                    "[0] Desistir\n\n"
-                    "Click: ");
+        "[1] Revelar\n"
+        "[2] Marcar\n"
+        "[0] Desistir\n\n"
+        "Click: ");
 
-    while (fscanf(stdin, "%u", &click) != EOF && (click < GIVE_UP || click > MARK_CLICK));
+    while (fscanf(stdin, "%u", & click) != EOF && (click < GIVE_UP || click > MARK_CLICK));
     clear_newlines();
 
     switch (click) {
 
     case GIVE_UP:
-        *typeOfClick = 'o'; // Desiste.
+        * typeOfClick = 'o'; // Desiste.
         return;
     case REVEAL_CLICK:
-        *typeOfClick = 'r'; // revela
+        * typeOfClick = 'r'; // revela
         break;
     case MARK_CLICK:
-        *typeOfClick = 'm'; // Marca
+        * typeOfClick = 'm'; // Marca
         break;
     }
 
     fprintf(stdout, "\nInsira as coordenadas do click: \n");
 
     fprintf(stdout, "Cord. X: ");
-    while (fscanf(stdin, "%d", pos_x) != EOF && (*pos_x < 0 || *pos_x > grid->size-1));
+    while (fscanf(stdin, "%d", pos_x) != EOF && ( *pos_x < 0 || *pos_x > grid->size - 1));
     clear_newlines();
 
     fprintf(stdout, "Cord. Y: ");
-    while (fscanf(stdin, "%d", pos_y) != EOF && (*pos_y < 0 || *pos_y > grid->size-1));
+    while (fscanf(stdin, "%d", pos_y) != EOF && ( *pos_y < 0 || *pos_y > grid->size - 1));
     clear_newlines();
 }
 
 int launchGame(GRID * grid, int size, int mines) {
 
     //Constroi o grid
-    grid  = buildGrid(size, mines);
+    grid = buildGrid(size, mines);
 
     //Variavel que armazenara o resultado o jogo
     GAME_RESULT gameResult = UNDEFINED;
@@ -335,7 +329,7 @@ int launchGame(GRID * grid, int size, int mines) {
     char typeOfClick = '0';
 
     //Enquanto o jogo nao tiver um resultado definido...
-    while(gameResult == UNDEFINED) {
+    while (gameResult == UNDEFINED) {
 
         showGrid(grid); // ...exibe o grid,...
 
@@ -345,7 +339,6 @@ int launchGame(GRID * grid, int size, int mines) {
             gameResult = LOSE;
             break;
         }
-
 
         gameResult = clickIn(grid, pos_x, pos_y, typeOfClick); // ... e realiza o click no grid aplicando o solver, se necessario.
 
@@ -369,7 +362,6 @@ int launchGame(GRID * grid, int size, int mines) {
     return gameResult;
 }
 
-
 int rreveal(GRID * grid, int pos_x, int pos_y, int isRecursive) {
 
     if (grid->fields[pos_x][pos_y].marked == TRUE) {
@@ -378,23 +370,17 @@ int rreveal(GRID * grid, int pos_x, int pos_y, int isRecursive) {
 
     if (grid->fields[pos_x][pos_y].revealed == TRUE) {
         return UNDEFINED;
-    }
-
-    else if (grid->fields[pos_x][pos_y].mine == TRUE) {
+    } else if (grid->fields[pos_x][pos_y].mine == TRUE) {
         return LOSE;
-    }
-
-    else if (grid->fields[pos_x][pos_y].nearMines != 0) {
-        if(isRecursive == FALSE) {
+    } else if (grid->fields[pos_x][pos_y].nearMines != 0) {
+        if (isRecursive == FALSE) {
             grid->fields[pos_x][pos_y].revealed = TRUE;
             --grid->toReveal;
         }
         return UNDEFINED;
-    }
-
-    else {
-            grid->fields[pos_x][pos_y].revealed = TRUE;
-            --grid->toReveal;
+    } else {
+        grid->fields[pos_x][pos_y].revealed = TRUE;
+        --grid->toReveal;
         recursive_reveal(grid, pos_x, pos_y);
     }
     return UNDEFINED;
@@ -404,16 +390,16 @@ void recursive_reveal(GRID * grid, int pos_x, int pos_y) {
     int i, j;
 
     //Definindo minimos e maximos (em torno)
-    int min_x = pos_x == 0 ? pos_x : pos_x-1;
-    int max_x = pos_x == grid->size-1 ? pos_x : pos_x+1;
+    int min_x = pos_x == 0 ? pos_x : pos_x - 1;
+    int max_x = pos_x == grid->size - 1 ? pos_x : pos_x + 1;
 
-    int min_y = pos_y == 0 ? pos_y : pos_y-1;
-    int max_y = pos_y == grid->size-1 ? pos_y : pos_y+1;
+    int min_y = pos_y == 0 ? pos_y : pos_y - 1;
+    int max_y = pos_y == grid->size - 1 ? pos_y : pos_y + 1;
 
     // Percorre o entorno de acordo com os minimos e maximos encontrados.
     // Não visita os campos em posições diagonais.
     for (i = min_x; i <= max_x; ++i) {
-        for (j = min_y; j <=max_y; ++j) {
+        for (j = min_y; j <= max_y; ++j) {
             if (i == pos_x && j == pos_y) {
                 continue;
             } else if ((i != min_x || i != max_x) && (j == min_y || j == max_y)) {

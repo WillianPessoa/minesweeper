@@ -11,7 +11,6 @@ typedef enum _OPTIONS {
     SECOND,
     THIRD,
     FOURTH,
-    FIFTH,
     NULL_OPTION
 }OPTIONS;
 
@@ -22,17 +21,20 @@ typedef enum _SIZE {
 }SIZE;
 
 typedef enum _MINES {
-    POUCAS = 5,
-    MEDIA = 10,
-    MUITAS = 15
+    POUCAS = 10,
+    MEDIA = 20,
+    MUITAS = 40
 }MINES;
 
 /** INICIA O MENU */
-void launchMenu(GRID *grid);
+void launchMenu(GRID * grid);
 
 /** MENU PRÉ-JOGO, EXIBE COMO O JOGO ESTÁ CONFIGURADO
  *  É chamada recursivamente sempre que o jogador decidir alterar as configurações de jogo */
 void preGame(int * size, int * mines);
+
+/** Exibe as regras do jogo */
+void showRules();
 
 /** MENU PRINCIPAL */
 void mainMenu(int * mainOp);

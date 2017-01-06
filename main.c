@@ -2,9 +2,7 @@
 #include "minesweeper.h"
 #include "menu.h"
 
-
-int main()
-{
+int main() {
     GRID * grid = NULL;
     launchMenu(grid);
 
