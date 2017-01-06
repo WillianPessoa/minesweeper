@@ -171,9 +171,9 @@ void defMinesMenu(int * mines, int * size) {
     int minesOp = NULL_OPTION;
 
     fprintf(stdout, "\n**************DEF_MINES**************\n\n"
-        "[1] Poucas (5%% do tamanho do grid)\n"
-        "[2] Normal (10%% do tamanho do grid)\n"
-        "[3] Muitas (15%% do tamanho do grid)\n\n"
+        "[1] Poucas (15%% do tamanho do grid)\n"
+        "[2] Normal (30%% do tamanho do grid)\n"
+        "[3] Muitas (60%% do tamanho do grid)\n\n"
         "[0] Voltar ");
 
     while ((fscanf(stdin, "%d", &minesOp) != EOF) && (minesOp < EXIT || minesOp > THIRD));

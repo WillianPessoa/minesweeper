@@ -21,9 +21,9 @@ typedef enum _SIZE {
 }SIZE;
 
 typedef enum _MINES {
-    POUCAS = 10,
-    MEDIA = 20,
-    MUITAS = 40
+    POUCAS = 15,
+    MEDIA = 30,
+    MUITAS = 60
 }MINES;
 
 /** INICIA O MENU */
