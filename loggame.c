@@ -1,4 +1,4 @@
-#include "records.h"
+#include "loggame.h"
 #include "menu.h"
 #include "tempo.h"
 
