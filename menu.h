@@ -1,6 +1,8 @@
 #ifndef MENU_H
 #define MENU_H
 
+#define SIZE_NAME 40
+
 typedef struct _GRID GRID; // Forward declaration
 
 typedef enum _OPTIONS {
@@ -25,16 +27,23 @@ typedef enum _MINES {
     MUITAS = 15
 }MINES;
 
+/** INICIA O MENU */
 void launchMenu(GRID *grid);
 
+/** MENU PRÉ-JOGO, EXIBE COMO O JOGO ESTÁ CONFIGURADO
+ *  É chamada recursivamente sempre que o jogador decidir alterar as configurações de jogo */
 void preGame(int * size, int * mines);
 
+/** MENU PRINCIPAL */
 void mainMenu(int * mainOp);
 
+/** MENU DE CONFIGURAÇÃO */
 void setupMenu(int * size, int * mines);
 
+/** MENU PARA DEFINIR O TAMANHO */
 void defSizeMenu(int * size);
 
+/** MENU PARA DEFINIR A QUANTIDADE DE MINAS */
 void defMinesMenu(int * mines, int * size);
 
 #endif // MENU_H

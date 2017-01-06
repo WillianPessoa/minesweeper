@@ -1,6 +1,7 @@
 #include "tempo.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void startGameTimer(time_t * gameTimer)
 {
@@ -9,7 +10,22 @@ void startGameTimer(time_t * gameTimer)
 
 void printTime(TEMPO * tempo_total)
 {
-    printf("O tempo de duracao total foi de %2d:%2d:%2d\n",tempo_total->horas,tempo_total->minutos,tempo_total->segundos);
+    FILE * file = stdout;
+
+    fprintf(file, "O tempo de duracao total foi de ");
+
+    printTimeInFile(file, tempo_total);
+}
+
+void printTimeInFile(FILE * file, TEMPO * tempo_total)
+{
+    if (tempo_total->horas > 0) {
+        fprintf(file, "%2d horas, ", tempo_total->horas);
+    } else if (tempo_total->minutos >0) {
+        fprintf(file, "%2d minutos e ", tempo_total->minutos);
+    }
+
+    fprintf(file, "%2d segundos.\n\n", tempo_total->segundos);
 }
 
 TEMPO * calcGameTimer(time_t *gameTimer) //como as funcoes de tempo vao estar seguidas, precisa-se guardar o tempo inicial e juntar com

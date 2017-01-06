@@ -21,6 +21,8 @@ void launchMenu(GRID * grid) {
     time_t timer;
     TEMPO * gameTime;
 
+    char name[SIZE_NAME];
+
     while (mainOp != EXIT) {
 
         fprintf(stdout, "\n**************MENU PRINCIPAL**************\n\n"
@@ -39,18 +41,24 @@ void launchMenu(GRID * grid) {
             startGameTimer(&timer); // Inicia o contador do tempo do jogo
             gameResult = launchGame(grid, size, mines); // Inicia o jogo e retorna o resultado.
             gameTime = calcGameTimer(&timer);   // Encerra o contador do tempo do jogo;
-            if (gameResult == WIN) {
-                //ASSINALAR RECORDS
+            if (gameResult == LOSE) {
+                fprintf(stdout, "\nVoce ganhou! Digite seu nome para ser adicionado ao hall da fama: ");
+                fgets(name, SIZE_NAME, stdin);
+                writeRecord(gameTime, name, &size, &mines);
             }
             break;
         case SECOND:
             setupMenu(&size, &mines);
             break;
         case THIRD:
-            //records();
+            records();
             break;
         }
     }
+
+    fprintf(stdout, "\n********************AGRADECIMENTOS*******************\n\n");
+    fprintf(stdout, "    Este jogo foi desenvolvido por Amanda Salles, \n  Aline Moura, Dennison Carvallo e Willian Pessoa.\n\n");
+    fprintf(stdout, "           AGRADECEMOS POR TER JOGADO! S2\n\n");
 }
 
 void preGame(int * size, int * mines) {
@@ -70,13 +78,9 @@ void preGame(int * size, int * mines) {
 
     case SECOND:
         setupMenu(size, mines);
+        preGame(size, mines);
         break;
     }
-
-    fprintf(stdout, "\n\nINICIALIZANDO O JOGO...\n");
-
-    unsigned int i;
-    for(i = 0; i < 599999999; ++i) {}
 }
 
 void setupMenu(int * size, int * mines) {
@@ -96,6 +100,7 @@ void setupMenu(int * size, int * mines) {
 
         case FIRST:
             defSizeMenu(size);
+            defMinesMenu(mines, size);
             setupOp = NULL_OPTION;
             break;
         case SECOND:
@@ -116,7 +121,7 @@ void defSizeMenu(int * size) {
                     "[3] Grande (15x15)\n\n"
                     "[0] Voltar ");
 
-    while (fscanf(stdin, "%d", &sizeOp) != EOF && (sizeOp < EXIT || sizeOp > THIRD));
+    while ((fscanf(stdin, "%d", &sizeOp) != EOF) && (sizeOp < EXIT || sizeOp > THIRD));
 
     switch(sizeOp) {
 
@@ -142,7 +147,7 @@ void defMinesMenu(int * mines, int *size) {
                     "[3] Muitas (15%% do tamanho do grid)\n\n"
                     "[0] Voltar ");
 
-    while (fscanf(stdin, "%d", &minesOp) != EOF && (minesOp < EXIT || minesOp > THIRD));
+    while ((fscanf(stdin, "%d", &minesOp) != EOF) && (minesOp < EXIT || minesOp > THIRD));
 
     switch(minesOp) {
 
