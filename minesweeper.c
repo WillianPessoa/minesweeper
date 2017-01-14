@@ -332,6 +332,7 @@ int launchGame(GRID * grid, int size, int mines) {
     while (gameResult == UNDEFINED) {
 
         showGrid(grid); // ...exibe o grid,...
+        showGridRevelead(grid);
 
         getValidsCommands(grid, &pos_x, &pos_y, &typeOfClick); // ... recebe os comandos validos (coordenadas e tipo do click)...
 
@@ -373,10 +374,8 @@ int rreveal(GRID * grid, int pos_x, int pos_y, int isRecursive) {
     } else if (grid->fields[pos_x][pos_y].mine == TRUE) {
         return LOSE;
     } else if (grid->fields[pos_x][pos_y].nearMines != 0) {
-        if (isRecursive == FALSE) {
             grid->fields[pos_x][pos_y].revealed = TRUE;
             --grid->toReveal;
-        }
         return UNDEFINED;
     } else {
         grid->fields[pos_x][pos_y].revealed = TRUE;
